@@ -523,10 +523,10 @@ class DSP:
         
         Vp = max(abs(signal))
         DR = 2*Vp
-        L = 2 ** l #numero de escalones, l = bits por palabra
-        q = DR / L  # escalón
+        L = 2 ** l #step numbert, l = btis per word
+        q = DR / L  
         x = np.copy(signal)
-        x[x > Vp] = Vp - q / 2  # saturación
+        x[x > Vp] = Vp - q / 2  # saturation
         x[x < -Vp] = -Vp + q  / 2   
         Q = q * (np.floor(x / q))
         nivel = ((Q - q / 2) / q + (L / 2)).astype(np.uint8)
@@ -548,7 +548,7 @@ class DSP:
         cat_cod = ''.join(cod)
         bin_cod = np.array(list(cat_cod)).astype(int)
 
-        ### Guradar Bits a un archivo
+        ### Save decoded bits
 
         with open("bits.txt", "w") as file:
             file.write(f"{'':>12}Bits Transmitidos \n")
@@ -603,8 +603,7 @@ class DSP:
     
         return freq_sv, S
     
-    
-    # Definir las funciones de codificación
+    #Encoding and decoding functions    
     def RZ_enc(self, h, bit_rate, duracion):
         n_bits = len(h)
         t_bit = 1 / bit_rate
@@ -612,30 +611,30 @@ class DSP:
         s_s = np.zeros(len(t_s))  # Iniciar salida
         
         for i in range(n_bits):
-            bit_i = i * t_bit  # Tiempo de inicio de bit actual
-            bit_f = (i + 1) * t_bit - 0.5 * t_bit  # Tiempo final de bit actual
+            bit_i = i * t_bit  # Start current bit time
+            bit_f = (i + 1) * t_bit - 0.5 * t_bit  # End current bit time
         
             if h[i] == 1:
-                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = 1  # Condición de voltaje alto
+                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = 1  # High voltage condition
             else:
-                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = -1  # Condición de voltaje bajo
+                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = -1  # Low voltage condition
         
         return t_s, s_s
 
     def NRZ_enc(self, h, bit_rate, duracion):
         n_bits = len(h)
         t_bit = 1 / bit_rate
-        t_s = np.arange(0, duracion, t_bit / 100)  # Vector Tiempo
-        s_s = np.zeros(len(t_s))  # Inicializar salida
+        t_s = np.arange(0, duracion, t_bit / 100)  # Support Vector
+        s_s = np.zeros(len(t_s))  # initialize output
         
         for i in range(n_bits):
-            bit_i = i * t_bit  # Tiempo de inicio del bit actual
-            bit_f = (i + 1) * t_bit  # Tiempo final del bit actual
+            bit_i = i * t_bit  # Start current bit time
+            bit_f = (i + 1) * t_bit  # end current bit time
         
             if h[i] == 1:
-                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = 1  # Condición de voltaje alto
+                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = 1  # High voltage condition
             else:
-                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = 0  # Condición de voltaje bajo
+                s_s[(t_s >= bit_i) & (t_s <= bit_f)] = 0  # Low voltage condition
         
         return t_s, s_s
 
@@ -759,11 +758,11 @@ class DSP:
         return signal.filtfilt(b, a, rx_sig)
 
     def awgn(self, snr, signal):
-        #Calcular Potencia de la señal
+        #Calculate power signal in watts
         signal_watts = signal**2
         sig_power = 10*np.log10(np.mean(signal_watts))
 
-        #Calcular Potencia del ruido
+        #Calcular power noise in watts
         noise_db = sig_power - snr
         noise_watts = 10 ** (noise_db / 10)
 
