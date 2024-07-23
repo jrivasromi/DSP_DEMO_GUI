@@ -1,4 +1,6 @@
-# -*- mode: python ; coding: utf-8 -*-
+#This file is to be meant to compile this project into an executable file using pyinstaller.
+
+
 
 from PyInstaller.utils.hooks import collect_all
 
