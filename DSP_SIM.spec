@@ -2,16 +2,24 @@
 
 
 
+import sys
+import os
 from PyInstaller.utils.hooks import collect_all
 
-runtime_hooks = [r"C:\Users\alexi\OneDrive - Universidad Tecnológica de Panamá\UTP\College Docs\S9\Comunicaciones 1\Lab\GUI_QtCreator\GUI_PCM\temp\fix_sys_stderr.py"]
+# Use a path relative to this spec file so it works on any machine
+_here = os.path.dirname(os.path.abspath(SPEC))
+runtime_hooks = [os.path.join(_here, 'temp', 'fix_sys_stderr.py')]
 
-binaries = [
-    ("C:\\Users\\alexi\\miniconda3\\envs\\compile_Qt_files\\Lib\\site-packages\\numpy.libs\\msvcp140-8021418012832a07a8ca5105a33b1086.dll", '.'),  
-    ("C:\\Users\\alexi\\miniconda3\\envs\\compile_Qt_files\\Lib\\site-packages\\numpy.libs\libscipy_openblas64_-fb1711452d4d8cee9f276fd1449ee5c7.dll", '.'),
-    (r"C:\Users\alexi\miniconda3\envs\compile_Qt_files\Lib\site-packages\pandas.libs", "."),  
-    (r'C:\Users\alexi\miniconda3\envs\compile_Qt_files\lib\site-packages\numpy\f2py\*', 'numpy/f2py'),
-]
+# Binaries differ per platform; let PyInstaller resolve them automatically on Linux/macOS
+if sys.platform == 'win32':
+    import glob as _glob
+    import sysconfig as _sysconfig
+    _sp = _sysconfig.get_path('purelib')  # e.g. .../site-packages
+    _numpy_libs = os.path.join(_sp, 'numpy.libs')
+    _win_dlls = _glob.glob(os.path.join(_numpy_libs, '*.dll'))
+    binaries = [(dll, '.') for dll in _win_dlls]
+else:
+    binaries = []
 
 a = Analysis(
     ['widget.py'],
