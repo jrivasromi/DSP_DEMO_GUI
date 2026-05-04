@@ -1,6 +1,8 @@
 # DSP_DEMO_GUI
 A GUI used to teach basic concepts of DSP and PCM. This application was made using the PySide6 framework and runs on **Linux and Windows**.
 
+Currently the GUI is SPANISH only as this was a University project.
+
 ![image](https://github.com/user-attachments/assets/f9aea6b3-975c-428f-bf0e-fbcf0e392c59)
 
 ## Running
