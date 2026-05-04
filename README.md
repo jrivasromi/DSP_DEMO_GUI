@@ -3,6 +3,8 @@ A GUI used to teach basic concepts of DSP and PCM. This application was made usi
 
 Currently the GUI is SPANISH only as this was a University project.
 
+The comments are in spanglish, sorry for the inconsistency! 
+
 ![image](https://github.com/user-attachments/assets/f9aea6b3-975c-428f-bf0e-fbcf0e392c59)
 
 ## Running
